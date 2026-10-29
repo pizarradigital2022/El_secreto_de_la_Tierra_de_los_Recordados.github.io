@@ -186,31 +186,16 @@
             padding: 8px 15px;
         }
 
-        /* Espacio de Imágenes */
-        .image-placeholder {
+        /* Clase común de imágenes para evitar recortes */
+        .game-image {
             width: 100%;
-            height: 220px;
+            max-height: 320px;
+            object-fit: contain;
             background: #120224;
-            border: 2px dashed var(--cyan-coco);
             border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             margin: 20px 0;
-            color: #888;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .image-placeholder span.filename {
-            color: var(--yellow-coco);
-            font-weight: bold;
-            font-family: monospace;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-top: 5px;
+            border: 2px solid var(--cyan-coco);
+            padding: 5px;
         }
 
         /* Avisos e Instrucciones */
@@ -337,7 +322,7 @@
                 Para cruzar el puente de pétalos de cempoalxóchitl y ayudar a Miguel a encontrar la guitarra legendaria, deberás resolver 6 enigmas matemáticos combinando los Teoremas de Tales y Pitágoras.
             </p>
 
-            <img src="./resources/img_portada_coco.jpg" alt="Portada Coco" style="width:100%; max-height:220px; object-fit:cover; border-radius:12px; margin:20px 0; border:2px solid var(--cyan-coco);">
+            <img src="./resources/img_portada_coco.jpg" alt="Portada Coco" class="game-image">
 
             <div class="form-group">
                 <label for="student-name">Nombre y Apellidos del Estudiante / Equipo:</label>
@@ -356,11 +341,11 @@
                 <button class="btn" onclick="startGame()">Comenzar la Aventura 💀</button>
             </div>
 
-            <hr>
-            <p style="text-align: center;">Autor: Joaquín Candañedo.<br><a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="./resources/CC_BY_SA.png" alt="Creative Commons Reconocimiento - Compartir Igual"></a></p>  
-            <hr>
+            <hr style="margin-top: 20px;">
+            <p style="text-align: center; margin-top: 10px;">Autor: Joaquín Candañedo.<br><a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="./resources/CC_BY_SA.png" alt="Creative Commons Reconocimiento - Compartir Igual" style="margin-top: 5px;"></a></p>  
+            <hr style="margin-bottom: 20px;">
             
-            <div style="margin-top: 40px; text-align: right; border-top: 1px dashed #555; padding-top: 15px;">
+            <div style="text-align: right; border-top: 1px dashed #555; padding-top: 15px;">
                 <button class="btn btn-teacher" onclick="openTeacherModal()">🔒 Modo Profesor</button>
             </div>
         </div>
@@ -376,8 +361,8 @@
 
             <div class="problem-desc" id="problem-desc"></div>
 
-            <div class="image-placeholder" id="problem-image-box">
-                <!-- Se llena dinámicamente con la etiqueta de la imagen -->
+            <div id="problem-image-box">
+                <!-- Se inyecta la etiqueta img real dinámicamente -->
             </div>
 
             <div class="form-group">
@@ -403,7 +388,7 @@
                 Toma la solución exacta obtenida en cada uno de los 6 enigmas y <strong>concaténalas ordenadamente</strong> (P1, P2, P3, P4, P5 y P6; todos los números seguidos sin espacios ni comas) para formar la clave final.
             </div>
 
-            <img src="./resources/img_candado_coco.jpg" alt="Candado Coco" style="width:100%; max-height:220px; object-fit:cover; border-radius:12px; margin:20px 0; border:2px solid var(--cyan-coco);">
+            <img src="./resources/img_candado_coco.jpg" alt="Candado Coco" class="game-image">
 
             <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
                 <h3 style="color: var(--pink-coco); font-size: 1.1rem; margin-bottom: 10px;">Respuestas introducidas previamente en los retos:</h3>
@@ -433,7 +418,7 @@
                 ¡El candado se ha abierto de par en par! Has demostrado un dominio admirable del Teorema de Tales y del Teorema de Pitágoras. Gracias a tu ingenio, la música ha vuelto a sonar en la Tierra de los Recordados.
             </p>
             
-            <img src="./resources/img_exito_coco.jpg" alt="¡Exito de Miguel! ¡Todos contentos!" style="width:100%; max-height:220px; object-fit:cover; border-radius:12px; margin:20px 0; border:2px solid var(--cyan-coco);">
+            <img src="./resources/img_exito_coco.jpg" alt="¡Exito de Miguel! ¡Todos contentos!" class="game-image">
 
             <button class="btn" onclick="resetApp()" style="margin-top: 20px;">Volver a Empezar 🔄</button>
         </div>
@@ -445,7 +430,7 @@
                 La combinación introducida o el tiempo transcurrido no han sido correctos. Recuerda revisar atentamente los cálculos de Tales y Pitágoras dibujados en tu cuaderno.
             </p>
             
-            <img src="./resources/img_fracaso_coco.jpg" alt="¡Fracaso de Miguel! ¡Todos tristes!" style="width:100%; max-height:220px; object-fit:cover; border-radius:12px; margin:20px 0; border:2px solid var(--cyan-coco);">
+            <img src="./resources/img_fracaso_coco.jpg" alt="¡Fracaso de Miguel! ¡Todos tristes!" class="game-image">
             
             <button class="btn" onclick="resetApp()" style="margin-top: 20px;">Reintentar Aventura 🔄</button>
         </div>
@@ -474,7 +459,6 @@
                 </div>
                 <button class="btn" onclick="verifyTeacherPass()">Acceder</button>
                 <p id="teacher-error-msg" style="color: #FF3366; margin-top: 10px; display: none;">Contraseña incorrecta.</p>
-                <!--<p style="font-size: 0.8rem; color: #888; margin-top: 15px;">*(Clave por defecto: <strong>PROFE2026</strong>)</p>-->
             </div>
 
             <div id="teacher-content-section" style="display: none;">
@@ -487,7 +471,7 @@
     </div>
 
     <script>
-        // ESTRUCTURA DE PROBLEMAS CON EXPRESIONES LATEX CORRECTAS EN JS
+        // ESTRUCTURA DE PROBLEMAS CON RUTAS CORREGIDAS A ./resources/
         const problems = [
             {
                 id: 1,
@@ -505,7 +489,7 @@
                 type: "Tales",
                 difficulty: "Fácil (Nivel 2)",
                 desc: "En el patio de Santa Cecilia, una planta de maíz pequeña de $2\\text{ m}$ de altura proyecta una sombra de $3\\text{ m}$. Al mismo tiempo, la torre del altar principal proyecta una sombra de $12\\text{ m}$. Calcula la altura $H$ (en metros) de la torre del altar.",
-                imageFile: "img_problema2_tales.jpg",
+                imageFile: "./resources/img_problema2_tales.jpg",
                 solution: 8,
                 explanation: "Por proporcionalidad de Tales: $\\frac{H}{2} = \\frac{12}{3} \\Rightarrow H = 2 \\cdot 4 = 8\\text{ m}$."
             },
@@ -515,7 +499,7 @@
                 type: "Pitágoras",
                 difficulty: "Medio (Nivel 3)",
                 desc: "El alebrije Pepita vuela en línea recta desde la cima de un poste de $12\\text{ m}$ de altura hasta tocar una ofrenda en el suelo que dista $9\\text{ m}$ de la base del poste. ¿Qué distancia $d$ (en metros) ha recorrido volando?",
-                imageFile: "img_problema3_pitagoras.jpg",
+                imageFile: "./resources/img_problema3_pitagoras.jpg",
                 solution: 15,
                 explanation: "Aplicando la hipotenusa en Pitágoras: $d = \\sqrt{12^2 + 9^2} = \\sqrt{144 + 81} = \\sqrt{225} = 15\\text{ m}$."
             },
@@ -525,7 +509,7 @@
                 type: "Tales",
                 difficulty: "Medio (Nivel 4)",
                 desc: "Dos mástiles paralelos están situados a orillas del río de las almas. El primer mástil mide $6\\text{ m}$ de altura y proyecta una sombra de $15\\text{ m}$. Si el segundo mástil mide $10\\text{ m}$ de altura, ¿cuál es la longitud $S$ (en metros) de la sombra que proyecta este segundo mástil?",
-                imageFile: "img_problema4_tales.jpg",
+                imageFile: "./resources/img_problema4_tales.jpg",
                 solution: 25,
                 explanation: "Aplicando el Teorema de Tales: $\\frac{6}{15} = \\frac{10}{S} \\Rightarrow 6 \\cdot S = 150 \\Rightarrow S = \\frac{150}{6} = 25\\text{ m}$."
             },
@@ -535,7 +519,7 @@
                 type: "Pitágoras",
                 difficulty: "Dificultad Alta (Nivel 5)",
                 desc: "Héctor y Miguel cuelgan una cuerda tensor desde una ventana alta de la torre hasta un anclaje del suelo. La distancia horizontal del anclaje a la base es de $24\\text{ m}$ y la cuerda mide $26\\text{ m}$ de largo. ¿A qué altura $H$ (en metros) del suelo está situada la ventana?",
-                imageFile: "img_problema5_pitagoras.jpg",
+                imageFile: "./resources/img_problema5_pitagoras.jpg",
                 solution: 10,
                 explanation: "Calculando el cateto mediante Pitágoras: $H = \\sqrt{26^2 - 24^2} = \\sqrt{676 - 576} = \\sqrt{100} = 10\\text{ m}$."
             },
@@ -545,7 +529,7 @@
                 type: "Tales",
                 difficulty: "Desafío Máximo (Nivel 6)",
                 desc: "En la estructura triangular de vigas del escenario, dos vigas horizontales paralelas se cortan por dos soportes transversales. En el soporte derecho, los segmentos miden $12\\text{ cm}$ y $18\\text{ cm}$. Si el segmento menor equivalente en el soporte izquierdo mide $16\\text{ cm}$, ¿cuánto mide el segmento mayor $X$ (en cm) en dicho soporte?",
-                imageFile: "img_problema6_tales.jpg",
+                imageFile: "./resources/img_problema6_tales.jpg",
                 solution: 24,
                 explanation: "Por proporcionalidad de Tales entre los segmentos correspondientes: $\\frac{12}{18} = \\frac{16}{X} \\Rightarrow 12 \\cdot X = 288 \\Rightarrow X = \\frac{288}{12} = 24\\text{ cm}$."
             }
@@ -635,12 +619,10 @@
             document.getElementById('problem-title').textContent = p.title;
             document.getElementById('problem-desc').innerHTML = p.desc;
             
-            // Configuración del Placeholder de Imagen
+            // Carga real de la imagen con la clase para ajustar proporciones
             const imgBox = document.getElementById('problem-image-box');
             imgBox.innerHTML = `
-                <p>📷 <strong>Esquema Geométrico del Problema ${p.id}</strong></p>
-                <p>Usa la foto temática asignada guardándola como:</p>
-                <span class="filename">${p.imageFile}</span>
+                <img src="${p.imageFile}" alt="Esquema ${p.title}" class="game-image">
             `;
 
             // Cargar respuesta previa si existe
