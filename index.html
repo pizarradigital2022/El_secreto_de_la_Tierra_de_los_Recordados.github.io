@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout Educativo: El secreto de la Tierra de los Recordados</title>
+    <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
+    
+    <!-- CONFIGURACIÓN DE MATHJAX PARA FORMATEO DE SÍMBOLOS MATEMÁTICOS -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+
+    <style>
+        :root {
+            --orange-coco: #E65100;
+            --purple-coco: #4A148C;
+            --yellow-coco: #FFD600;
+            --pink-coco: #C2185B;
+            --cyan-coco: #00E5FF;
+            --dark-bg: #1A002C;
+            --card-bg: #2A0845;
+            --text-light: #FFF8E1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(230, 81, 0, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(194, 24, 91, 0.15) 0%, transparent 40%);
+        }
+
+        /* Papel Picado Decorativo Superior */
+        .papel-picado {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+        .banner-flag {
+            width: 50px;
+            height: 40px;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+            animation: sway 3s ease-in-out infinite alternate;
+        }
+        .banner-flag:nth-child(1) { background-color: var(--pink-coco); animation-delay: 0s; }
+        .banner-flag:nth-child(2) { background-color: var(--yellow-coco); animation-delay: 0.4s; }
+        .banner-flag:nth-child(3) { background-color: var(--cyan-coco); animation-delay: 0.8s; }
+        .banner-flag:nth-child(4) { background-color: var(--orange-coco); animation-delay: 1.2s; }
+        .banner-flag:nth-child(5) { background-color: var(--purple-coco); animation-delay: 1.6s; }
+
+        @keyframes sway {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border: 4px solid var(--orange-coco);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(230, 81, 0, 0.3);
+            position: relative;
+        }
+
+        /* Header & Temporizador */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed var(--pink-coco);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--yellow-coco);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .timer-box {
+            background: #000;
+            border: 2px solid var(--yellow-coco);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #00FF66;
+            letter-spacing: 2px;
+            box-shadow: inset 0 0 8px rgba(0,255,102,0.4);
+        }
+
+        /* Gestión de Pantallas */
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+
+        /* Formularios y Botones */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--yellow-coco);
+            font-size: 1.1rem;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid var(--pink-coco);
+            background: #120224;
+            color: #FFF;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus, select:focus {
+            border-color: var(--cyan-coco);
+            box-shadow: 0 0 8px var(--cyan-coco);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--orange-coco), var(--pink-coco));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2deg);
+            box-shadow: 0 6px 15px rgba(255, 214, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #4A148C, #00E5FF);
+        }
+
+        .btn-teacher {
+            background: #333;
+            border: 1px solid var(--yellow-coco);
+            font-size: 0.9rem;
+            padding: 8px 15px;
+        }
+
+        /* Espacio de Imágenes */
+        .image-placeholder {
+            width: 100%;
+            height: 220px;
+            background: #120224;
+            border: 2px dashed var(--cyan-coco);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #888;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .image-placeholder span.filename {
+            color: var(--yellow-coco);
+            font-weight: bold;
+            font-family: monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        /* Avisos e Instrucciones */
+        .notebook-notice {
+            background: rgba(255, 214, 0, 0.1);
+            border-left: 4px solid var(--yellow-coco);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .problem-desc {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        /* Navegación */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--cyan-coco);
+        }
+
+        /* Modal Profesor y Notificaciones */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 3px solid var(--yellow-coco);
+            border-radius: 15px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 25px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.8rem;
+            color: var(--pink-coco);
+            cursor: pointer;
+        }
+
+        /* Estilos Pantalla Éxito/Fracaso */
+        .result-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .result-screen h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .success-title { color: #00FF66; }
+        .fail-title { color: #FF3366; }
+
+        .teacher-badge {
+            display: inline-block;
+            background: var(--pink-coco);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .solution-item {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 0;
+            text-align: left;
+        }
+
+        .solution-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+
+    <div class="papel-picado">
+        <div class="banner-flag"></div>
+        <div class="banner-flag"></div>
+        <div class="banner-flag"></div>
+        <div class="banner-flag"></div>
+        <div class="banner-flag"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="app-title">El Secreto de la Tierra de los Recordados</h1>
+            <div class="timer-box" id="timer-display">60:00</div>
+        </header>
+
+        <!-- PANTALLA 0: CONFIGURACIÓN -->
+        <div id="screen-0" class="screen active">
+            <h2 style="color: var(--pink-coco); margin-bottom: 15px; text-align: center;">¡Bienvenido/a a la Gran Fiesta de los Antepasados!</h2>
+            <p style="margin-bottom: 20px; line-height: 1.5; text-align: center;">
+                Para cruzar el puente de pétalos de cempoalxóchitl y ayudar a Miguel a encontrar la guitarra legendaria, deberás resolver 6 enigmas matemáticos combinando los Teoremas de Tales y Pitágoras.
+            </p>
+
+            <div class="image-placeholder">
+                <p>📷 <strong>Imagen Decorativa de Portada</strong></p>
+                <p>Carga la foto temática de Coco para esta pantalla guardándola exactamente con el nombre:</p>
+                <span class="filename">img_portada_coco.jpg</span>
+            </div>
+
+            <div class="form-group">
+                <label for="student-name">Nombre y Apellidos del Estudiante / Equipo:</label>
+                <input type="text" id="student-name" placeholder="Escribe tu nombre completo aquí..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="time-select">Tiempo de la Misión (Minutos):</label>
+                <select id="time-select">
+                    <option value="60" selected>60 Minutos (Recomendado)</option>
+                    <option value="30">30 Minutos (Modo Desafío)</option>
+                </select>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="startGame()">Comenzar la Aventura 💀</button>
+            </div>
+
+            <div style="margin-top: 40px; text-align: right; border-top: 1px dashed #555; padding-top: 15px;">
+                <button class="btn btn-teacher" onclick="openTeacherModal()">🔒 Modo Profesor</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DE PROBLEMA DINÁMICA (PANTALLAS 1 A 6) -->
+        <div id="screen-problem" class="screen">
+            <div class="progress-bar" id="problem-progress">Reto 1 de 6</div>
+            <h2 id="problem-title" style="color: var(--yellow-coco); margin-bottom: 10px;"></h2>
+            
+            <div class="notebook-notice">
+                ✏️ <strong>¡Atención Músico!:</strong> En cada problema, dibuja el esquema geométrico correspondiente y escribe todos los pasos de resolución de forma clara en tu <strong>cuaderno de trabajo</strong>.
+            </div>
+
+            <div class="problem-desc" id="problem-desc"></div>
+
+            <div class="image-placeholder" id="problem-image-box">
+                <!-- Se llena dinámicamente con la etiqueta de la imagen -->
+            </div>
+
+            <div class="form-group">
+                <label for="problem-answer">Introduce el resultado numérico exacto de tu resolución:</label>
+                <input type="text" id="problem-answer" placeholder="Ejemplo: 12" oninput="saveCurrentAnswer()">
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" id="btn-prev" onclick="navigateProblem(-1)">⬅️ Anterior</button>
+                <button class="btn" id="btn-next" onclick="navigateProblem(1)">Siguiente ➡️</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DEL CANDADO FINAL -->
+        <div id="screen-lock" class="screen">
+            <h2 style="color: var(--yellow-coco); text-align: center; margin-bottom: 10px;">🔓 El Candado de la Guitarra de Ernesto</h2>
+            <p style="text-align: center; margin-bottom: 15px;">
+                Estudiante registrado: <strong id="lock-student-name" style="color: var(--cyan-coco);"></strong>
+            </p>
+
+            <div class="notebook-notice" style="background: rgba(0, 229, 255, 0.1); border-color: var(--cyan-coco);">
+                🔑 <strong>Regla para obtener el código definitivo de 6 cifras:</strong><br>
+                Toma la solución exacta obtenida en cada uno de los 6 enigmas y <strong>concaténalas ordenadamente</strong> (P1 + P2 + P3 + P4 + P5 + P6) para formar la clave final.
+            </div>
+
+            <div class="image-placeholder">
+                <p>📷 <strong>Imagen del Candado Sagrado</strong></p>
+                <span class="filename">img_candado_coco.jpg</span>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: var(--pink-coco); font-size: 1.1rem; margin-bottom: 10px;">Respuestas introducidas previamente en los retos:</h3>
+                <div id="summary-answers" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                    <!-- Rellenado dinámicamente -->
+                </div>
+            </div>
+
+            <!-- CAMPO DE TEXTO PARA VALIDACIÓN MANUAL DE LA COMBINACIÓN -->
+            <div class="form-group" style="background: rgba(255, 214, 0, 0.05); padding: 15px; border-radius: 10px; border: 1px solid var(--yellow-coco);">
+                <label for="final-lock-input" style="font-size: 1.15rem; color: var(--yellow-coco); text-align: center; display: block;">
+                    🔑 Introduce el código final de 6 dígitos del candado:
+                </label>
+                <input type="text" id="final-lock-input" placeholder="Ejemplo: 4815251024" style="text-align: center; font-size: 1.5rem; letter-spacing: 4px; font-weight: bold; border-color: var(--yellow-coco);">
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToProblem(6)">⬅️ Volver a los Problemas</button>
+                <button class="btn" onclick="checkLockCode()">Intentar Abrir Candado 🔑</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DE ÉXITO -->
+        <div id="screen-success" class="screen result-screen">
+            <h2 class="success-title">🎉 ¡FELICIDADES, <span class="player-name-display"></span>! 🎉</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.6;">
+                ¡El candado se ha abierto de par en par! Has demostrado un dominio admirable del Teorema de Tales y del Teorema de Pitágoras. Gracias a tu ingenio, la música ha vuelto a sonar en la Tierra de los Recordados.
+            </p>
+            <div class="image-placeholder">
+                <p>📷 <strong>Imagen de Victoria y Celebración</strong></p>
+                <span class="filename">img_exito_coco.jpg</span>
+            </div>
+            <button class="btn" onclick="resetApp()" style="margin-top: 20px;">Volver a Empezar 🔄</button>
+        </div>
+
+        <!-- PANTALLA DE FRACASO -->
+        <div id="screen-fail" class="screen result-screen">
+            <h2 class="fail-title">💀 ¡EL CANDADO NO SE HA ABIERTO, <span class="player-name-display"></span>! 💀</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.6;">
+                La combinación introducida o el tiempo transcurrido no han sido correctos. Recuerda revisar atentamente los cálculos de Tales y Pitágoras dibujados en tu cuaderno.
+            </p>
+            <div class="image-placeholder">
+                <p>📷 <strong>Imagen de Intento Fallido</strong></p>
+                <span class="filename">img_fracaso_coco.jpg</span>
+            </div>
+            <button class="btn" onclick="resetApp()" style="margin-top: 20px;">Reintentar Aventura 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- MODAL PERSONALIZADO DE AVISOS (REEMPLAZO DE ALERT) -->
+    <div class="modal" id="custom-alert-modal">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <h3 style="color: var(--yellow-coco); margin-bottom: 15px; font-size: 1.4rem;">💀 Mensaje del Guía de los Muertos</h3>
+            <p id="alert-modal-text" style="font-size: 1.1rem; line-height: 1.5; margin-bottom: 20px;"></p>
+            <button class="btn" onclick="closeCustomAlert()">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- MODAL MODO PROFESOR -->
+    <div class="modal" id="teacher-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTeacherModal()">&times;</span>
+            <h2 style="color: var(--yellow-coco); margin-bottom: 15px;">🔒 Panel de Control del Profesor</h2>
+            
+            <div id="teacher-login-section">
+                <p style="margin-bottom: 15px;">Introduce la contraseña de profesor para acceder al solucionario completo:</p>
+                <div class="form-group">
+                    <input type="password" id="teacher-pass-input" placeholder="Contraseña de acceso">
+                </div>
+                <button class="btn" onclick="verifyTeacherPass()">Acceder</button>
+                <p id="teacher-error-msg" style="color: #FF3366; margin-top: 10px; display: none;">Contraseña incorrecta.</p>
+                <!--<p style="font-size: 0.8rem; color: #888; margin-top: 15px;">*(Clave por defecto: <strong>PROFE2026</strong>)</p>-->
+            </div>
+
+            <div id="teacher-content-section" style="display: none;">
+                <h3 style="color: var(--cyan-coco); margin-bottom: 15px;">Solucionario del Breakout</h3>
+                <div id="solutions-list">
+                    <!-- Se llena con las soluciones detalladas y MathJax -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ESTRUCTURA DE PROBLEMAS CON EXPRESIONES LATEX CORRECTAS EN JS
+        const problems = [
+            {
+                id: 1,
+                title: "Enigma 1: El Puente de Cempoalxóchitl",
+                type: "Pitágoras",
+                difficulty: "Fácil (Nivel 1)",
+                desc: "Miguel necesita cruzar una brecha en el puente de flores. Para apoyarse, coloca una escalera de $5\\text{ m}$ de longitud sobre la pared de la plataforma. Si la base de la escalera se encuentra a $3\\text{ m}$ de la pared, ¿a qué altura $h$ (en metros) alcanza la pared?",
+                imageFile: "img_problema1_pitagoras.jpg",
+                solution: 4,
+                explanation: "Aplicando el Teorema de Pitágoras: $h = \\sqrt{5^2 - 3^2} = \\sqrt{25 - 9} = \\sqrt{16} = 4\\text{ m}$."
+            },
+            {
+                id: 2,
+                title: "Enigma 2: La Sombra del Maíz de Abuelita",
+                type: "Tales",
+                difficulty: "Fácil (Nivel 2)",
+                desc: "En el patio de Santa Cecilia, una planta de maíz pequeña de $2\\text{ m}$ de altura proyecta una sombra de $3\\text{ m}$. Al mismo tiempo, la torre del altar principal proyecta una sombra de $12\\text{ m}$. Calcula la altura $H$ (en metros) de la torre del altar.",
+                imageFile: "img_problema2_tales.jpg",
+                solution: 8,
+                explanation: "Por proporcionalidad de Tales: $\\frac{H}{2} = \\frac{12}{3} \\Rightarrow H = 2 \\cdot 4 = 8\\text{ m}$."
+            },
+            {
+                id: 3,
+                title: "Enigma 3: El Vuelo del Alebrije Pepita",
+                type: "Pitágoras",
+                difficulty: "Medio (Nivel 3)",
+                desc: "El alebrije Pepita vuela en línea recta desde la cima de un poste de $12\\text{ m}$ de altura hasta tocar una ofrenda en el suelo que dista $9\\text{ m}$ de la base del poste. ¿Qué distancia $d$ (en metros) ha recorrido volando?",
+                imageFile: "img_problema3_pitagoras.jpg",
+                solution: 15,
+                explanation: "Aplicando la hipotenusa en Pitágoras: $d = \\sqrt{12^2 + 9^2} = \\sqrt{144 + 81} = \\sqrt{225} = 15\\text{ m}$."
+            },
+            {
+                id: 4,
+                title: "Enigma 4: Los Faroles del Pasaje Central",
+                type: "Tales",
+                difficulty: "Medio (Nivel 4)",
+                desc: "Dos mástiles paralelos están situados a orillas del río de las almas. El primer mástil mide $6\\text{ m}$ de altura y proyecta una sombra de $15\\text{ m}$. Si el segundo mástil mide $10\\text{ m}$ de altura, ¿cuál es la longitud $S$ (en metros) de la sombra que proyecta este segundo mástil?",
+                imageFile: "img_problema4_tales.jpg",
+                solution: 25,
+                explanation: "Aplicando el Teorema de Tales: $\\frac{6}{15} = \\frac{10}{S} \\Rightarrow 6 \\cdot S = 150 \\Rightarrow S = \\frac{150}{6} = 25\\text{ m}$."
+            },
+            {
+                id: 5,
+                title: "Enigma 5: El Rescate en la Torre de Ernesto",
+                type: "Pitágoras",
+                difficulty: "Dificultad Alta (Nivel 5)",
+                desc: "Héctor y Miguel cuelgan una cuerda tensor desde una ventana alta de la torre hasta un anclaje del suelo. La distancia horizontal del anclaje a la base es de $24\\text{ m}$ y la cuerda mide $26\\text{ m}$ de largo. ¿A qué altura $H$ (en metros) del suelo está situada la ventana?",
+                imageFile: "img_problema5_pitagoras.jpg",
+                solution: 10,
+                explanation: "Calculando el cateto mediante Pitágoras: $H = \\sqrt{26^2 - 24^2} = \\sqrt{676 - 576} = \\sqrt{100} = 10\\text{ m}$."
+            },
+            {
+                id: 6,
+                title: "Enigma 6: La Escenografía del Gran Escenario",
+                type: "Tales",
+                difficulty: "Desafío Máximo (Nivel 6)",
+                desc: "En la estructura triangular de vigas del escenario, dos vigas horizontales paralelas se cortan por dos soportes transversales. En el soporte derecho, los segmentos miden $12\\text{ cm}$ y $18\\text{ cm}$. Si el segmento menor equivalente en el soporte izquierdo mide $16\\text{ cm}$, ¿cuánto mide el segmento mayor $X$ (en cm) en dicho soporte?",
+                imageFile: "img_problema6_tales.jpg",
+                solution: 24,
+                explanation: "Por proporcionalidad de Tales entre los segmentos correspondientes: $\\frac{12}{18} = \\frac{16}{X} \\Rightarrow 12 \\cdot X = 288 \\Rightarrow X = \\frac{288}{12} = 24\\text{ cm}$."
+            }
+        ];
+
+        // ESTADO DE LA APLICACIÓN
+        let currentProblemIndex = 0;
+        let studentAnswers = ["", "", "", "", "", ""];
+        let timerInterval = null;
+        let timeLeft = 0;
+        let studentName = "";
+
+        // INICIALIZACIÓN
+        window.onload = function() {
+            renderTeacherSolutions();
+        };
+
+        // RENDERIZADO REUTILIZABLE DE MATHJAX
+        function renderMath() {
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise().catch(err => console.log('MathJax error:', err));
+            }
+        }
+
+        // FUNCIONES DE ALERTA PERSONALIZADA
+        function showAlert(message) {
+            document.getElementById('alert-modal-text').textContent = message;
+            document.getElementById('custom-alert-modal').style.display = 'flex';
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('custom-alert-modal').style.display = 'none';
+        }
+
+        // NAVEGACIÓN Y PANTALLAS
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            renderMath();
+        }
+
+        // INICIAR JUEGO
+        function startGame() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            if (!nameInput) {
+                showAlert("Por favor, introduce tu nombre y apellidos para continuar.");
+                return;
+            }
+            studentName = nameInput;
+            const duration = parseInt(document.getElementById('time-select').value);
+            
+            // Iniciar Temporizador
+            timeLeft = duration * 60;
+            startTimer();
+
+            // Cargar Problema 1
+            currentProblemIndex = 0;
+            loadProblem(currentProblemIndex);
+            showScreen('screen-problem');
+        }
+
+        // TEMPORIZADOR
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishGame(false); // Fracaso por tiempo
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            document.getElementById('timer-display').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // CARGA DE PROBLEMA
+        function loadProblem(index) {
+            const p = problems[index];
+            document.getElementById('problem-progress').textContent = `Reto ${index + 1} de 6 | Categoria: ${p.type} (${p.difficulty})`;
+            document.getElementById('problem-title').textContent = p.title;
+            document.getElementById('problem-desc').innerHTML = p.desc;
+            
+            // Configuración del Placeholder de Imagen
+            const imgBox = document.getElementById('problem-image-box');
+            imgBox.innerHTML = `
+                <p>📷 <strong>Esquema Geométrico del Problema ${p.id}</strong></p>
+                <p>Usa la foto temática asignada guardándola como:</p>
+                <span class="filename">${p.imageFile}</span>
+            `;
+
+            // Cargar respuesta previa si existe
+            document.getElementById('problem-answer').value = studentAnswers[index];
+
+            // Configurar botones de navegación
+            document.getElementById('btn-prev').style.visibility = (index === 0) ? 'hidden' : 'visible';
+            
+            const nextBtn = document.getElementById('btn-next');
+            if (index === problems.length - 1) {
+                nextBtn.textContent = "Ir al Candado Final 🔓";
+            } else {
+                nextBtn.textContent = "Siguiente ➡️";
+            }
+
+            renderMath();
+        }
+
+        function saveCurrentAnswer() {
+            const val = document.getElementById('problem-answer').value.trim();
+            studentAnswers[currentProblemIndex] = val;
+        }
+
+        function navigateProblem(direction) {
+            saveCurrentAnswer();
+            currentProblemIndex += direction;
+
+            if (currentProblemIndex >= problems.length) {
+                openLockScreen();
+            } else if (currentProblemIndex < 0) {
+                currentProblemIndex = 0;
+            } else {
+                loadProblem(currentProblemIndex);
+            }
+        }
+
+        function goToProblem(problemNum) {
+            currentProblemIndex = problemNum - 1;
+            loadProblem(currentProblemIndex);
+            showScreen('screen-problem');
+        }
+
+        // PANTALLA DEL CANDADO
+        function openLockScreen() {
+            document.getElementById('lock-student-name').textContent = studentName;
+            
+            const summaryContainer = document.getElementById('summary-answers');
+            summaryContainer.innerHTML = "";
+
+            // Autorellenar el campo del candado concatenando las soluciones introducidas previa/automáticamente
+            const autoConcatenated = studentAnswers.map(a => a.toString().trim()).join('');
+            document.getElementById('final-lock-input').value = autoConcatenated;
+
+            studentAnswers.forEach((ans, i) => {
+                const item = document.createElement('div');
+                item.style.background = "#120224";
+                item.style.padding = "8px";
+                item.style.borderRadius = "6px";
+                item.style.border = "1px solid var(--pink-coco)";
+                item.innerHTML = `<small style="color:#aaa;">P${i+1}:</small> <strong style="color:var(--yellow-coco);">${ans || '?'}</strong>`;
+                summaryContainer.appendChild(item);
+            });
+
+            showScreen('screen-lock');
+        }
+
+        // VERIFICAR CÓDIGO FINAL
+        function checkLockCode() {
+            const correctCode = problems.map(p => p.solution.toString()).join('');
+            const userCode = document.getElementById('final-lock-input').value.trim();
+
+            if (userCode === correctCode) {
+                finishGame(true);
+            } else {
+                finishGame(false);
+            }
+        }
+
+        // FINALIZAR JUEGO
+        function finishGame(success) {
+            clearInterval(timerInterval);
+            document.querySelectorAll('.player-name-display').forEach(el => el.textContent = studentName);
+
+            if (success) {
+                showScreen('screen-success');
+            } else {
+                showScreen('screen-fail');
+            }
+        }
+
+        function resetApp() {
+            studentAnswers = ["", "", "", "", "", ""];
+            document.getElementById('student-name').value = "";
+            document.getElementById('final-lock-input').value = "";
+            showScreen('screen-0');
+        }
+
+        // MODAL MODO PROFESOR
+        function openTeacherModal() {
+            document.getElementById('teacher-modal').style.display = 'flex';
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacher-modal').style.display = 'none';
+        }
+
+        function verifyTeacherPass() {
+            const pass = document.getElementById('teacher-pass-input').value;
+            const errorMsg = document.getElementById('teacher-error-msg');
+            
+            if (pass === 'PROFE2026') {
+                errorMsg.style.display = 'none';
+                document.getElementById('teacher-login-section').style.display = 'none';
+                document.getElementById('teacher-content-section').style.display = 'block';
+                renderMath();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function renderTeacherSolutions() {
+            const listContainer = document.getElementById('solutions-list');
+            listContainer.innerHTML = "";
+
+            let fullCode = "";
+
+            problems.forEach(p => {
+                fullCode += p.solution.toString();
+                const item = document.createElement('div');
+                item.className = 'solution-item';
+                item.innerHTML = `
+                    <h4 style="color:var(--yellow-coco);">${p.title} <span class="teacher-badge">${p.type}</span></h4>
+                    <p style="margin:5px 0;"><strong>Enunciado:</strong> ${p.desc}</p>
+                    <p style="color:var(--cyan-coco); margin: 3px 0;"><strong>Solución Exacta:</strong> ${p.solution}</p>
+                    <p style="font-size:0.95rem; color:#DDD; margin-top: 3px;"><strong>Paso a paso:</strong> ${p.explanation}</p>
+                `;
+                listContainer.appendChild(item);
+            });
+
+            const lockCodeBox = document.createElement('div');
+            lockCodeBox.style.marginTop = "20px";
+            lockCodeBox.style.padding = "12px";
+            lockCodeBox.style.background = "rgba(0, 255, 102, 0.15)";
+            lockCodeBox.style.border = "2px dashed #00FF66";
+            lockCodeBox.style.borderRadius = "8px";
+            lockCodeBox.innerHTML = `<strong>🔑 Código Combinado del Candado Final:</strong> <span style="font-size:1.4rem; color:#00FF66; letter-spacing:2px; font-weight:bold;">${fullCode}</span>`;
+            listContainer.appendChild(lockCodeBox);
+        }
+    </script>
+</body>
+</html>
